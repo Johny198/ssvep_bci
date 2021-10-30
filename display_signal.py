@@ -28,8 +28,8 @@ class Plot:
 
     def update_plot(self):
         data = self.board.get_current_board_data(self.num_points)
-        for channel in range(len(self.channels)):
-            self.curves[channel].setData(data[channel+1].tolist())
+        for i,channel in enumerate(self.channels):
+            self.curves[i].setData(data[channel].tolist())
         self.app.processEvents()
 
 

@@ -15,8 +15,8 @@ class Plot:
         self.win = pg.GraphicsLayoutWidget(title='Brain waves Plot',
                                            size=(1000, 800), show=True)
         self.curves = []
-        for i in range(len(self.channels)):
-            p = self.win.addPlot(row=i, col=0, title='Channel {:d}'.format(i+1))
+        for i,channel in enumerate(self.channels):
+            p = self.win.addPlot(row=i, col=0, title='Channel {:d}'.format(channel))
             p.hideAxis('bottom')
             p.hideAxis('left')
             curve = p.plot( pen=(255, 0, 0))

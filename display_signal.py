@@ -9,8 +9,7 @@ class Plot:
         self.board_id = id
         self.board = board
         self.channels = self.board.get_eeg_channels(self.board_id)
-        window_size = 4
-        self.num_points = window_size*self.board.get_sampling_rate(self.board_id)
+        self.num_points = len(self.channels)*self.board.get_sampling_rate(self.board_id)
         self.app = QApplication(sys.argv)
         self.win = pg.GraphicsLayoutWidget(title='Brain waves Plot',
                                            size=(1000, 800), show=True)

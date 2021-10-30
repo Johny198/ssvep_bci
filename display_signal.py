@@ -3,6 +3,7 @@ import pyqtgraph as pg
 from PyQt5.QtWidgets import QApplication
 from brainflow.board_shim import BoardShim, BrainFlowInputParams
 import time
+import keyboard
 
 class Plot:
     def __init__(self, board, id):
@@ -24,8 +25,9 @@ class Plot:
         while True:
             time.sleep(0.05)
             self.update_plot()
-        sys.exit(self.app.exec_())
-
+            if keyboard.is_pressed('esc'):
+                break
+                sys.exit()       
     def update_plot(self):
         data = self.board.get_current_board_data(self.num_points)
         for i,channel in enumerate(self.channels):

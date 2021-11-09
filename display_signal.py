@@ -1,8 +1,6 @@
-import pyqtgraph as pg
-from PyQt5.QtWidgets import QApplication
 from brainflow.board_shim import BoardShim, BrainFlowInputParams
-import time
-import keyboard
+import sys
+import pyqtgraph as pg
 
 class Plot:
     def __init__(self, board, id):
@@ -10,7 +8,7 @@ class Plot:
         self.board = board
         self.channels = self.board.get_eeg_channels(self.board_id)
         self.num_points = len(self.channels)*self.board.get_sampling_rate(self.board_id)
-        self.app = QApplication(sys.argv)
+        self.app = pg.QtGui.QApplication(sys.argv)
         self.win = pg.GraphicsLayoutWidget(title='Brain waves Plot',
                                            size=(1000, 800), show=True)
         self.curves = []
@@ -20,11 +18,10 @@ class Plot:
             p.hideAxis('left')
             curve = p.plot( pen=(255, 0, 0))
             self.curves.append(curve)
-        while True:
-            time.sleep(0.05)
-            self.update_plot()
-            if keyboard.is_pressed('esc'):
-                break    
+        timer = pg.Qt.QtCore.QTimer()
+        timer.timeout.connect(self.update_plot)
+        timer.start()
+        sys.exit(self.app.instance().exec_())   
     def update_plot(self):
         data = self.board.get_current_board_data(self.num_points)
         for i,channel in enumerate(self.channels):

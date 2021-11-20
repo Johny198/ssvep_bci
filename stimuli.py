@@ -39,10 +39,10 @@ for frameN in range(600):
     elif frameN >= 400:
         win0.shape_stim.pos = (180,0)
         win0.shape_stim.ori = 180
-    if (frameN % 4) == 0: # 30hz
+    if (frameN % 4) == 0: # 15hz
         win0.im_list[0].draw()
         win0.im_list[1].draw()
-    if (frameN % 2) == 0: # 20 hz
+    if (frameN % 2) == 0: # 30 hz
         win0.im_list[2].draw()
     win0.win.flip()
 win0.shape_stim.autoDraw = False

@@ -1,26 +1,52 @@
-from psychopy import visual, event, info
-import sys
+from psychopy import visual, event
 
-win0 = visual.Window([1536,864], screen = 0, monitor = 'testMonitor', fullscr = True, color = [-1,-1,-1], units = 'pix')
+
+class Experiment_Window:
+    def __init__(self, size, screen_nr, color):
+        self.win = visual.Window(size = size, screen = screen_nr, monitor = 'testMonitor', fullscr = True, color = color)
+        self.im_list = []
+        self.text_list = []
+    def add_im_stim(self, path, pos, color):
+        self.im_stim = visual.ImageStim(win = self.win, image = path, units = 'pix', pos = pos, color = color)
+        self.im_list.append(self.im_stim)
+    def add_text_stim(self,pos,color, text):
+        self.text_stim = visual.TextStim(win=self.win, text = text, pos = pos, color = color, units = 'pix')
+        self.text_list.append(self.text_stim)
+    def add_shape_stim(self, pos, color, vert, size, ori):
+        self.shape_stim = visual.ShapeStim(win = self.win, units = 'pix', size = size, pos = pos, fillColor = color, lineColor = color, vertices = vert, ori = ori)
+
+# parameters
 fps = 60
-face_l = visual.ImageStim(win = win0, image='face_l.png', units='pix', size=(150,396), colorSpace='rgb255', pos = (-90,0), color = (255,255,100))
-face_r = visual.ImageStim(win = win0, image='face_r.png', units='pix', size=(151,396), colorSpace='rgb255', pos = (90,0), color = (255, 120, 255))
-vase = visual.ImageStim(win = win0, image='vase.png', units='pix', size=(290,396), colorSpace='rgb255', pos = (0,0), color = (255,255,255))
+win0 = Experiment_Window(size = [1536,864], screen_nr = 0, color = 'black') # screen_nr = 1 displays window on external screen
+win0.add_im_stim(path = 'face_l.png',pos = (-90,0), color = 'green' )
+win0.add_im_stim(path = 'face_r.png', pos = (90,0), color = 'red')
+win0.add_im_stim(path = 'vase.png', pos = (0,0), color = 'blue')
+vert = [(-0.4,0.05),(-0.4,-0.05),(-.2,-0.05),(-.2,-0.1),(0,0),(-.2,0.1),(-.2,0.05)]
+win0.add_shape_stim(pos = (-180,0), color = 'yellow', size = 250, vert = vert, ori = 0)
+win0.add_text_stim(pos = (0, 0), color = 'white', text = 'Na ekranie zobaczysz migający obraz złożony z kilku niezależnych rysunków. Twoim zadaniem jest skupienie uwagi na rysunku wskazanym przez żółtą strzałkę. Żeby przejść dalej naciśnij dowolny klawisz. ')
+win0.add_text_stim(pos = (0, 0), color = 'white', text = 'To koniec. Dziękujemy za udział w badaniu.')
 
-arrowVert = [(-0.4,0.05),(-0.4,-0.05),(-.2,-0.05),(-.2,-0.1),(0,0),(-.2,0.1),(-.2,0.05)]
-arrow = visual.ShapeStim(win=win0, vertices=arrowVert, fillColor='yellow', size=250, lineColor='yellow', pos = (0,200), ori = 90, autoDraw = True)
 
-for frameN in range(fps):
-    if (frameN % 4) == 0:
-        face_l.color = (255,255,100)
-        face_r.color = (255,255,100)
-        face_l.draw()
-        face_r.draw()
-    else:
-        face_l.color = (255, 120, 255)
-        face_r.color = (255, 120, 255)
-        face_l.draw()
-        face_r.draw()
-    if (frameN % 2) == 0: 
-        vase.draw()
-    win0.flip()
+# drawing
+win0.text_list[0].draw()
+win0.win.flip()
+event.waitKeys()
+win0.shape_stim.autoDraw = True
+for frameN in range(600):
+    if frameN >= 200 and frameN < 400:
+        win0.shape_stim.pos = (0,210)
+        win0.shape_stim.ori = 90
+    elif frameN >= 400:
+        win0.shape_stim.pos = (180,0)
+        win0.shape_stim.ori = 180
+    if (frameN % 4) == 0: # 30hz
+        win0.im_list[0].draw()
+        win0.im_list[1].draw()
+    if (frameN % 2) == 0: # 20 hz
+        win0.im_list[2].draw()
+    win0.win.flip()
+win0.shape_stim.autoDraw = False
+win0.win.flip()
+win0.text_list[1].draw()
+win0.win.flip()
+event.waitKeys()

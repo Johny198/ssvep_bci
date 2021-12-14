@@ -41,10 +41,10 @@ class App:
         if self.is_filtered == True:
             for i,channel in enumerate(self.board.eeg_channels):
                 DataFilter.perform_bandstop( data=data[channel], sampling_rate=self.board.sampling_rate, #bandstop filter 49-51
-                                            center_freq = 50, band_width = 2, order = 2,
+                                            center_freq = 50, band_width = 2, order = 4,
                                             filter_type = FilterTypes.BUTTERWORTH.value, ripple = 0)
-                DataFilter.perform_bandpass(data = data[channel], sampling_rate=self.board.sampling_rate, # bandpass filter 1-50
-                                            center_freq = 25.5, band_width = 49, order = 2,
+                DataFilter.perform_bandpass(data = data[channel], sampling_rate=self.board.sampling_rate, # bandpass filter 1-49
+                                            center_freq = 25, band_width = 48, order = 4,
                                             filter_type = FilterTypes.BUTTERWORTH.value, ripple = 0 )
                 self.p.curves[i].setData(data[channel].tolist())
         else:

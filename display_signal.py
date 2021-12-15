@@ -35,6 +35,10 @@ class App:
         timer = pg.Qt.QtCore.QTimer()
         timer.timeout.connect(self.update_plots)
         timer.start(25) # every 25ms executes update_plot function
+        button = pg.Qt.QtWidgets.QPushButton("Filter", win)
+        button.setGeometry(720, 5, 40, 30)
+        button.clicked.connect(self.filter)
+        button.show()
         sys.exit(self.app.instance().exec_())
 
 

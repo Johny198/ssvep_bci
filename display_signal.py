@@ -25,11 +25,13 @@ class App:
     def stop_streaming(self):
         self.board.streaming_board.stop_stream()
         self.board.streaming_board.release_session()
-    def add_plots(self, is_filtered):
+    def filter(self):
+        self.is_filtered = not self.is_filtered
+    def add_plots(self):
         win = pg.GraphicsLayoutWidget(title='Brain waves Plot',
                                            size=(800, 600), show=True)
         self.p = Plot(win = win, channels = self.board.eeg_channels ) # creates empty plots
-        self.is_filtered = is_filtered
+        self.is_filtered = False
         timer = pg.Qt.QtCore.QTimer()
         timer.timeout.connect(self.update_plots)
         timer.start(25) # every 25ms executes update_plot function
@@ -64,7 +66,7 @@ class Plot:
 def main():
     a = App(board_id = 1) # 1 for Ganglion, 2 for Cyton
     a.stream_data()
-    a.add_plots(is_filtered = True)
+    a.add_plots()
     a.stop_streaming()
 
 if __name__ == "__main__":

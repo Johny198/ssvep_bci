@@ -1,0 +1,5 @@
+setup.py
+ssvep_bci.egg-info/PKG-INFO
+ssvep_bci.egg-info/SOURCES.txt
+ssvep_bci.egg-info/dependency_links.txt
+ssvep_bci.egg-info/top_level.txt

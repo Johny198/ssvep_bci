@@ -70,7 +70,7 @@ class App:
                         cca = CCA(n_components = 1)
                         u,v = cca.fit_transform(self.data.T, ref.sig_array.T)
                         corr = np.corrcoef(u.T,v.T)[0,1]
-                        print('Correlation coefficient for {} signal is {} \n observed state was {}'.format(ref.type,corr, self.state.value))
+                        print('Correlation coefficient for {} signal is {} \n observed state was {}'.format(ref.type,corr, self.state.value)) #1- sawtooth stimulus 2-sinusoidal 3-square
                         DataFilter.write_file(self.data,'test.csv', 'w')
 
             else:

@@ -100,7 +100,7 @@ win0.add_text(text='To koniec badania. Dziękujemy za udział.', height=20, pos=
 time = 180
 
 # DRAWING
-def draw(state):
+def draw(state, is_finished):
     win0.text_list[0].draw()
     win0.win.flip()
     event.waitKeys()
@@ -131,6 +131,7 @@ def draw(state):
                                           frame=j)
             win0.win.flip()
         state.value = 0
+    is_finished.value = 1
     win0.text_list[2].draw()
     win0.win.flip()
     event.waitKeys()

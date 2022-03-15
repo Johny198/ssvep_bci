@@ -27,7 +27,7 @@ class Square():
 
 
 class Exp_Window():
-    def __init__(self):  # creates window and lists of stimuli
+    def __init__(self):  # creates window and lists of stimuli [1536, 864]
         self.win = visual.Window(size=[1536, 864], units='pix',
                                  colorSpace='rgb', color=(-1, -1, -1),
                                  monitor='testMonitor', fullscr=True, screen=0)
@@ -100,28 +100,22 @@ win0.add_text(text='To koniec badania. Dziękujemy za udział.', height=20, pos=
 time = 180
 
 # DRAWING
-def draw(state, is_finished):
+def draw(state,is_finished): #
+    seq = np.array([0, 1, 2])
+    np.random.shuffle(seq)
     win0.text_list[0].draw()
     win0.win.flip()
     event.waitKeys()
-    temp = [0, 1, 2]
     for i in range(len(win0.square_list)):
-        rand = np.random.choice(temp)
-        temp.remove(rand)
-        win0.square_list[rand].change_col(color=(1, 1, 0))
+        win0.square_list[seq[i]].change_col(color=(1, 1, 0))
         for j in win0.square_list:
             j.sq_stim.draw()
         win0.text_list[1].draw()
         win0.win.flip()
         event.waitKeys()
-        win0.square_list[rand].change_col(color=(0, 1, 0))
+        win0.square_list[seq[i]].change_col(color=(0, 1, 0))
         win0.win.flip()
-        if rand == 0:
-            state.value = 1
-        elif rand == 1:
-            state.value = 2
-        elif rand == 2:
-            state.value = 3
+        state.value = seq[i] + 1
         for j in range(time):
             win0.square_list[0].op_change(freq=10, wave='sawtooth', phase=0.35,
                                           frame=j)

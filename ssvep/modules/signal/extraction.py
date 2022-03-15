@@ -16,10 +16,10 @@ class Reference_Group():
             self.sig_array = np.vstack([np.sin(2*np.pi*freq*t+phase*np.pi),np.cos(2*np.pi*freq*t+phase*np.pi),np.sin(2*np.pi*freq*2*t+phase*np.pi),np.cos(2*np.pi*freq*2*t+phase*np.pi)])
         elif self.waveform == 'square':
             self.type = 'square'
-            self.sig_array = np.vstack([signal.square(2*np.pi*freq*t+phase*np.pi+np.pi),signal.square(2*np.pi*freq*t+phase*np.pi),signal.square(2*np.pi*freq*2*t+phase*np.pi+np.pi),signal.square(2*np.pi*freq*2*t+phase*np.pi)])
+            self.sig_array = np.vstack([signal.square(2*np.pi*freq*t+phase*np.pi+phase*np.pi),signal.square(2*np.pi*freq*t+np.pi),signal.square(2*np.pi*freq*2*t+phase*np.pi),signal.square(2*np.pi*freq*2*t+np.pi)])
         else:
             self.type = 'sawtooth'
-            self.sig_array = np.vstack([signal.sawtooth(2*np.pi*freq*t-phase*np.pi),signal.sawtooth(2*np.pi*freq*t-phase*np.pi+np.pi),signal.sawtooth(2*np.pi*freq*2*t-phase*np.pi),signal.sawtooth(2*np.pi*freq*2*t-phase*np.pi+np.pi)])
+            self.sig_array = np.vstack([signal.sawtooth(2*np.pi*freq*t-phase*np.pi),signal.sawtooth(2*np.pi*freq*t-phase*np.pi-np.pi),signal.sawtooth(2*np.pi*freq*2*t-phase*np.pi),signal.sawtooth(2*np.pi*freq*2*t-phase*np.pi-np.pi)])
 
 
 

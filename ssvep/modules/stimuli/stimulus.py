@@ -97,25 +97,53 @@ win0.add_text(text='Badanie składa się z trzech prób. Twoim zadaniem jest sku
 win0.add_text(text='Skup wzrok na żółtym kwadracie i naciśnij dowolny klawisz aby rozpocząć badanie', height=20, pos=(0, -200))
 win0.add_text(text='To koniec badania. Dziękujemy za udział.', height=20, pos=(0, 0))
 
-time = 180
+time = 300 # 180
 
 # DRAWING
+'''def draw(state,is_finished): #
+    win0.text_list[0].draw()
+    win0.win.flip()
+    event.waitKeys()
+    for i in range(10):
+        seq = np.array([0, 1, 2])
+        np.random.shuffle(seq)
+        for i in range(len(win0.square_list)):
+            win0.square_list[seq[i]].change_col(color=(1, 1, 0))
+            for j in win0.square_list:
+                j.sq_stim.draw()
+            win0.text_list[1].draw()
+            win0.win.flip()
+            event.waitKeys()
+            win0.square_list[seq[i]].change_col(color=(0, 1, 0))
+            win0.win.flip()
+            state.value = seq[i] + 1
+            for j in range(time):
+                win0.square_list[0].op_change(freq=10, wave='sawtooth', phase=0.35,
+                                              frame=j)
+                win0.square_list[1].op_change(freq=12, wave='sin', phase=0.7,
+                                              frame=j)
+                win0.square_list[2].op_change(freq=15, wave='square', phase=1.05,
+                                              frame=j)
+                win0.win.flip()
+            state.value = 0
+    is_finished.value = 1
+    win0.text_list[2].draw()
+    win0.win.flip()
+    event.waitKeys()'''
 def draw(state,is_finished): #
-    seq = np.array([0, 1, 2])
-    np.random.shuffle(seq)
     win0.text_list[0].draw()
     win0.win.flip()
     event.waitKeys()
     for i in range(len(win0.square_list)):
-        win0.square_list[seq[i]].change_col(color=(1, 1, 0))
+        win0.square_list[i].change_col(color=(1, 1, 0))
         for j in win0.square_list:
             j.sq_stim.draw()
         win0.text_list[1].draw()
         win0.win.flip()
         event.waitKeys()
-        win0.square_list[seq[i]].change_col(color=(0, 1, 0))
+        win0.square_list[i].change_col(color=(0, 1, 0))
         win0.win.flip()
-        state.value = seq[i] + 1
+        state.value = i + 1
         for j in range(time):
             win0.square_list[0].op_change(freq=10, wave='sawtooth', phase=0.35,
                                           frame=j)

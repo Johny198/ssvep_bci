@@ -17,16 +17,17 @@ class Board:
 
 
 class App:
-    def __init__(self, board_id, state, is_finished,mp_array):
+    def __init__(self, board_id, state, is_finished,last_state):
         self.app = pg.QtGui.QApplication(sys.argv)
         self.board = Board(board_id)
         self.state = state
         self.is_finished = is_finished
-        self.mp_array = mp_array
-
+        self.last_state = last_state
+        self.execute = 0
+        self.data = []
     def stream_data(self):
         self.board.streaming_board.prepare_session()
-        self.board.streaming_board.start_stream(45000)
+        self.board.streaming_board.start_stream(1001)
 
     def stop_streaming(self):
         self.board.streaming_board.stop_stream()
@@ -43,24 +44,29 @@ class App:
 
 
     def update_plots(self):  # updates data from each plot
-        if self.is_finished.value == 1: #when stimuli are finished  exits the program
-            sys.exit()
+
         if self.state.value != 0: #no need to display signal if there is no stimulus
-            self.data = self.board.streaming_board.get_current_board_data(601)[1:5,:]
-            self.data[0,600] = self.state.value #value of state is saved in last column
+            if self.last_state.value != self.state.value:
+                self.execute = 1
+            self.data = self.board.streaming_board.get_current_board_data(1000)[1:5,:]
+            self.last_state.value = self.state.value #value of state is saved in last column
             for i in range(len(self.board.eeg_channels)):
-                DataFilter.detrend(self.data[i,:600], DetrendOperations.CONSTANT.value)
-                DataFilter.perform_bandstop(data=self.data[i,:600], sampling_rate=self.board.sampling_rate,  # bandstop filter 32-52
+                DataFilter.detrend(self.data[i], DetrendOperations.CONSTANT.value)
+                DataFilter.perform_bandstop(data=self.data[i], sampling_rate=self.board.sampling_rate,  # bandstop filter 32-52
                                             center_freq=42, band_width=20, order=6,  #
                                             filter_type=FilterTypes.BUTTERWORTH.value, ripple=0)
-                DataFilter.perform_bandpass(data=self.data[i,:600], sampling_rate=self.board.sampling_rate,  # bandpass filter 8-32
+                DataFilter.perform_bandpass(data=self.data[i], sampling_rate=self.board.sampling_rate,  # bandpass filter 8-32
                                             center_freq=20, band_width=24, order=6,
                                             filter_type=FilterTypes.BUTTERWORTH.value, ripple=0)
-                self.p.curves[i].setData(self.data[i,:600].tolist())
-            if len(self.data[0]) == 601:
-                flattened = self.data.flatten(order = 'C') #reshapes data into 1d
-                for idx, num in enumerate(self.mp_array):
-                    self.mp_array[idx] = flattened[idx] #share data between processes
+                self.p.curves[i].setData(self.data[i].tolist())
+        if self.execute == 1 and len(self.data[0]) == 1000:
+            DataFilter.write_file(self.data, 'test.csv', 'a')
+            self.execute = 0  # use 'a' for append mod
+        if self.is_finished.value == 1: #when stimuli are finished  exits the program
+            sys.exit()
+
+
+
 class Plot:
     def __init__(self, channels, win):
         self.curves = []
@@ -72,8 +78,8 @@ class Plot:
             self.curves.append(curve)
 
 
-def run(state, is_finished, mp_array):
-    a = App(state = state, board_id=1, is_finished = is_finished, mp_array = mp_array)  # 1 for Ganglion, 2 for Cyton
+def run(state, is_finished, last_state):
+    a = App(state = state, board_id=1, is_finished = is_finished, last_state = last_state)  # 1 for Ganglion, 2 for Cyton
     a.stream_data()
     a.add_plots()
     a.stop_streaming()
